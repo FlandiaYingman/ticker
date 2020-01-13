@@ -1,6 +1,5 @@
 package tech.flandia_yingm.ticker
 
-import javafx.beans.binding.Bindings
 import javafx.scene.control.SelectionMode
 import javafx.scene.paint.Color
 import javafx.scene.text.FontPosture
@@ -41,7 +40,7 @@ class TickerView : View() {
                                 fontSize = 16.pt
                             }
                         }
-                        label(it.completedStringProperty) {
+                        label(it.completionStringProperty) {
                             style {
                                 fontSize = 8.pt
                             }

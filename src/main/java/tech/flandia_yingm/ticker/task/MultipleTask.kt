@@ -23,8 +23,8 @@ class MultipleTask(
     private val deadlines: List<LocalDateTime>
     val deadlineProperty: ObjectProperty<LocalDateTime> = SimpleObjectProperty()
 
-    private val completed: List<TaskCompletion>
-    val completedProperty: ObjectProperty<TaskCompletion> = SimpleObjectProperty()
+    private val completion: List<TaskCompletion>
+    val completionProperty: ObjectProperty<TaskCompletion> = SimpleObjectProperty()
 
     init {
         if (tasks.isEmpty()) {
@@ -34,17 +34,17 @@ class MultipleTask(
         names = tasks.map { it.name }
         comments = tasks.map { it.comment }
         deadlines = tasks.map { it.deadline }
-        completed = tasks.map { it.completed }
+        completion = tasks.map { it.completion }
 
         nameProperty.value = if (names.distinct().size == 1) names[0] else "<Multiple Names>"
         commentProperty.value = if (comments.distinct().size == 1) comments[0] else "<Multiple Comments>"
         deadlineProperty.value = if (deadlines.distinct().size == 1) deadlines[0] else deadlines[0]
-        completedProperty.value = if (completed.distinct().size == 1) completed[0] else completed[0]
+        completionProperty.value = if (completion.distinct().size == 1) completion[0] else completion[0]
 
         nameProperty.addListener { _, _, _ -> tasks.forEach { it.nameProperty.value = nameProperty.value } }
         commentProperty.addListener { _, _, _ -> tasks.forEach { it.commentProperty.value = commentProperty.value } }
         deadlineProperty.addListener { _, _, _ -> tasks.forEach { it.deadlineProperty.value = deadlineProperty.value } }
-        completedProperty.addListener { _, _, _ -> tasks.forEach { it.completedProperty.value = completedProperty.value } }
+        completionProperty.addListener { _, _, _ -> tasks.forEach { it.completionProperty.value = completionProperty.value } }
     }
 
 }

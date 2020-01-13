@@ -14,7 +14,7 @@ class Task(
         name: String = "",
         comment: String = "",
         deadline: LocalDateTime = LocalDateTime.now(),
-        completed: TaskCompletion = TaskCompletion.INCOMPLETE
+        completion: TaskCompletion = TaskCompletion.INCOMPLETE
 ) : Comparable<Task> {
 
     val nameProperty = SimpleStringProperty(this, "name", name)
@@ -26,16 +26,8 @@ class Task(
     val deadlineProperty = SimpleObjectProperty(this, "deadline", deadline)
     var deadline: LocalDateTime by deadlineProperty
 
-    val completedProperty = SimpleObjectProperty(this, "completed", completed)
-    var completed: TaskCompletion by completedProperty
-
-
-    override fun compareTo(other: Task): Int =
-            Comparator.comparing(Task::completed)
-                    .thenComparing(Task::deadline)
-                    .thenComparing(Task::name)
-                    .thenComparing(Task::comment)
-                    .compare(this, other)
+    val completionProperty = SimpleObjectProperty(this, "completion", completion)
+    var completion: TaskCompletion by completionProperty
 
     val nameStringProperty: StringProperty
         get() = nameProperty.asStringProperty { if (it.isNullOrEmpty()) "<No Name>" else it }
@@ -45,8 +37,8 @@ class Task(
         get() = deadlineProperty.asNowRelativePeriod().asStringProperty { if (it.isNegative) "${it.format()} To" else "${it.format()} Past" }
     val deadlineStringProperty: StringProperty
         get() = deadlineProperty.asStringProperty { it.toString() }
-    val completedStringProperty: StringProperty
-        get() = completedProperty.asStringProperty {
+    val completionStringProperty: StringProperty
+        get() = completionProperty.asStringProperty {
             when (it) {
                 TaskCompletion.INCOMPLETE -> "Incomplete"
                 TaskCompletion.COMPLETE -> "Complete"
@@ -54,5 +46,12 @@ class Task(
                 else -> "<NULL_ERROR>"
             }
         }
+
+    override fun compareTo(other: Task): Int =
+            Comparator.comparing(Task::completion)
+                    .thenComparing(Task::deadline)
+                    .thenComparing(Task::name)
+                    .thenComparing(Task::comment)
+                    .compare(this, other)
 
 }

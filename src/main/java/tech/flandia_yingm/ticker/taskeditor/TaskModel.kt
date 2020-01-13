@@ -9,7 +9,7 @@ class TaskModel(task: MultipleTask) : ItemViewModel<MultipleTask>(task) {
     val name = bind(MultipleTask::nameProperty)
     val comment = bind(MultipleTask::commentProperty)
     val deadline = bind(MultipleTask::deadlineProperty)
-    val completed = bind(MultipleTask::completedProperty)
+    val completion = bind(MultipleTask::completionProperty)
 
 }
 

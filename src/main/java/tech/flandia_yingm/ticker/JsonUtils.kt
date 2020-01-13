@@ -36,20 +36,19 @@ object JsonUtils {
 
     object TaskListAdapter : JsonSerializer<List<Task>>, JsonDeserializer<List<Task>> {
         class TaskData(task: Task) {
-            val name = task.name
-            val comment = task.comment
-            val deadline = task.deadline
-            val completion = task.completed
-
+            private val name = task.name
+            private val comment = task.comment
+            private val deadline = task.deadline
+            private val completion = task.completion
             fun toTask(): Task = Task(name, comment, deadline, completion)
         }
 
-        override fun serialize(src: List<Task>?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement? {
+        override fun serialize(src: List<Task>?, type: Type?, context: JsonSerializationContext?): JsonElement? {
             val taskDataList = src.orEmpty().map { TaskData(it) }
             return context?.serialize(taskDataList, object : TypeToken<List<TaskData>>() {}.type)
         }
 
-        override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): List<Task> {
+        override fun deserialize(json: JsonElement?, type: Type?, context: JsonDeserializationContext?): List<Task> {
             val taskDataList = context?.deserialize<List<TaskData>>(json, object : TypeToken<List<TaskData>>() {}.type)
             return taskDataList.orEmpty().map { it.toTask() }
         }
