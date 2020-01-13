@@ -13,6 +13,12 @@ class TickerView : View() {
 
     override val root = borderpane {
         top = hbox {
+            button("New") {
+                action(controller::newTask)
+            }
+            button("Remove") {
+                action(controller::removeSelectedTasks)
+            }
             button("Complete") {
                 action(controller::completeSelectedTasks)
             }
@@ -24,7 +30,7 @@ class TickerView : View() {
             }
         }
         center = listview(controller.sortedTasks) {
-            Bindings.bindContent(controller.selectedTasks, selectionModel.selectedItems)
+            controller.selectionModelProperty.bind(selectionModelProperty())
             selectionModel.selectionMode = SelectionMode.MULTIPLE
 
             cellFormat {
