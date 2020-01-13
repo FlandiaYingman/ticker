@@ -31,7 +31,6 @@ class TickerView : View() {
         center = listview(controller.sortedTasks) {
             controller.selectionModelProperty.bind(selectionModelProperty())
             selectionModel.selectionMode = SelectionMode.MULTIPLE
-
             cellFormat {
                 graphic = form {
                     fieldset {

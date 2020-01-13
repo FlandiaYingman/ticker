@@ -33,7 +33,7 @@ class TickerController : Controller() {
 
     val selectionModelProperty: ObjectProperty<MultipleSelectionModel<Task>> = SimpleObjectProperty<MultipleSelectionModel<Task>>()
 
-    val selectedTasks: ObservableList<Task>
+    private val selectedTasks: ObservableList<Task>
         get() = selectionModelProperty.value.selectedItems
 
     init {
@@ -57,12 +57,10 @@ class TickerController : Controller() {
 
     fun completeSelectedTasks() {
         selectedTasks.toList().forEach { it.completion = TaskCompletion.COMPLETE }
-        selectionModelProperty.value.clearSelection()
     }
 
     fun incompleteSelectedTasks() {
         selectedTasks.toList().forEach { it.completion = TaskCompletion.INCOMPLETE }
-        selectionModelProperty.value.clearSelection()
     }
 
     fun editSelectedTasks() {

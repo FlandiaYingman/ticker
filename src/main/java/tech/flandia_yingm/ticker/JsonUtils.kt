@@ -26,11 +26,11 @@ object JsonUtils {
         if (!tasksFile.exists()) {
             saveTasks(listOf())
         }
-        return gson.fromJson<List<Task>>(File("./tasks.json").readText())
+        return gson.fromJson<List<Task>>(tasksFile.readText())
     }
 
     fun saveTasks(tasks: List<Task>) {
-        File("./tasks.json").writeText(gson.toJson(tasks, object : TypeToken<List<Task>>() {}.type))
+        tasksFile.writeText(gson.toJson(tasks, object : TypeToken<List<Task>>() {}.type))
     }
 
 
