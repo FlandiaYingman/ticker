@@ -1,14 +1,16 @@
 package tech.flandia_yingm.ticker.taskeditor
 
-import tech.flandia_yingm.ticker.task.Task
-import tornadofx.*
+import tech.flandia_yingm.ticker.task.MultipleTask
+import tornadofx.ItemViewModel
 
 
-class TaskModel(task: Task) : ItemViewModel<Task>(task) {
-    val name = bind(Task::nameProperty)
-    val comment = bind(Task::commentProperty)
-    val deadline = bind(Task::deadlineProperty)
-    val completed = bind(Task::completedProperty)
+class TaskModel(task: MultipleTask) : ItemViewModel<MultipleTask>(task) {
+
+    val name = bind(MultipleTask::nameProperty)
+    val comment = bind(MultipleTask::commentProperty)
+    val deadline = bind(MultipleTask::deadlineProperty)
+    val completed = bind(MultipleTask::completedProperty)
+
 }
 
 

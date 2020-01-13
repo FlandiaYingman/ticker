@@ -1,12 +1,12 @@
 package tech.flandia_yingm.ticker.taskeditor
 
-import tech.flandia_yingm.ticker.task.Task
+import tech.flandia_yingm.ticker.task.MultipleTask
 import tech.flandia_yingm.ticker.task.TaskUtils.asLocalDateProperty
 import tornadofx.*
 
-class TaskEditorView(editingTask: Task) : View() {
+class TaskEditorView(editing: MultipleTask) : View() {
 
-    private val model = TaskModel(editingTask)
+    private val model = TaskModel(editing)
 
     override val root = form {
         title = "Task Editor"
@@ -39,10 +39,6 @@ class TaskEditorView(editingTask: Task) : View() {
             }
             spacer()
         }
-    }
-
-    companion object {
-
     }
 
 }

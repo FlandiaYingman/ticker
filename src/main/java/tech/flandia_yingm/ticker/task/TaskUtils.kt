@@ -5,8 +5,8 @@ import javafx.beans.property.Property
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
-import org.joda.time.Period
-import org.joda.time.format.PeriodFormatterBuilder
+import org.apache.commons.lang3.time.DurationFormatUtils
+import org.joda.time.DateTimeConstants.MILLIS_PER_DAY
 import java.lang.Thread.currentThread
 import java.lang.Thread.sleep
 import java.time.Duration
@@ -16,7 +16,19 @@ import kotlin.concurrent.thread
 
 object TaskUtils {
 
-    fun Property<LocalDateTime>.asLocalDateProperty(): Property<LocalDate> {
+    private val nowLocalDateTimeProperty: Property<LocalDateTime>
+
+    init {
+        nowLocalDateTimeProperty = SimpleObjectProperty(LocalDateTime.now())
+        thread(isDaemon = true) {
+            while (!currentThread().isInterrupted) {
+                Platform.runLater { nowLocalDateTimeProperty.value = LocalDateTime.now() }
+                sleep(100)
+            }
+        }
+    }
+
+    internal fun Property<LocalDateTime>.asLocalDateProperty(): Property<LocalDate> {
         val dateTimeProperty = this
         val dateProperty = SimpleObjectProperty(dateTimeProperty.value.toLocalDate())
         dateTimeProperty.addListener { _, _, newVal ->
@@ -28,8 +40,8 @@ object TaskUtils {
         return dateProperty
     }
 
-    fun Property<LocalDateTime>.asNowRelativePeriod(): Property<Duration> {
-        val dateTimeProperty = this;
+    internal fun Property<LocalDateTime>.asNowRelativePeriod(): Property<Duration> {
+        val dateTimeProperty = this
         val nowProperty = nowLocalDateTimeProperty
         val nowRelativeProperty = SimpleObjectProperty(Duration.between(dateTimeProperty.value, nowProperty.value))
 
@@ -47,37 +59,21 @@ object TaskUtils {
         return nowRelativeProperty
     }
 
-
-    private val nowLocalDateTimeProperty: Property<LocalDateTime>
-
-    init {
-        nowLocalDateTimeProperty = SimpleObjectProperty(LocalDateTime.now())
-        thread {
-            while (!currentThread().isInterrupted) {
-                Platform.runLater { nowLocalDateTimeProperty.value = LocalDateTime.now() }
-                sleep(100)
-            }
+    internal fun <T> Property<T>.asStringProperty(converter: (T) -> String): StringProperty {
+        val stringProp = SimpleStringProperty(converter(this.value))
+        this.addListener { _, _, _ ->
+            stringProp.value = converter(this.value)
         }
+        return stringProp
     }
-
 
     fun Duration.format(): String {
-        val formatter = PeriodFormatterBuilder()
-                .appendDays()
-                .appendSuffix(" Days ")
-                .appendHours()
-                .appendSuffix("Hours")
-                .appendMinutes()
-                .appendSuffix("Minutes")
-                .appendSeconds()
-                .appendSuffix(" Seconds ")
-                .toFormatter()
-        return formatter.print(Period.millis(this.toMillis().toInt()))
-    }
-
-    fun <T> Property<T>.asStringProperty(converter: (T) -> String): StringProperty {
-        val stringProp = SimpleStringProperty(converter(this.value))
-        st
+        val millis = kotlin.math.abs(toMillis())
+        return if (millis > MILLIS_PER_DAY) {
+            DurationFormatUtils.formatDuration(millis, "d 'Days' HH':'mm':'ss")
+        } else {
+            DurationFormatUtils.formatDuration(millis, "HH':'mm':'ss")
+        }
     }
 
 }

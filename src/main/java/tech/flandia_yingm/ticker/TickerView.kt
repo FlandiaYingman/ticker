@@ -1,74 +1,66 @@
 package tech.flandia_yingm.ticker
 
-import javafx.beans.property.ObjectProperty
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.scene.control.ListView
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
+import javafx.beans.binding.Bindings
+import javafx.scene.control.SelectionMode
 import javafx.scene.paint.Color
-import javafx.scene.paint.Paint
 import javafx.scene.text.FontPosture
-import tech.flandia_yingm.ticker.task.Task
-import tech.flandia_yingm.ticker.taskeditor.TaskEditorView
 import tornadofx.*
-import tech.flandia_yingm.ticker.task.TaskUtils.asNowRelativePeriod
+
 
 class TickerView : View() {
 
-    val controller: TickerController by inject()
-
-    val selectedTask: ObjectProperty<Task> = SimpleObjectProperty(Task())
+    private val controller: TickerController by inject()
 
     override val root = borderpane {
         top = hbox {
             button("Complete") {
-                action {
-                    selectedTask.value.completed = true
-                }
+                action(controller::completeSelectedTasks)
+            }
+            button("Incomplete") {
+                action(controller::incompleteSelectedTasks)
             }
             button("Edit") {
-                action {
-                    TaskEditorView(selectedTask.value).openModal()
-                }
+                action(controller::editSelectedTasks)
             }
         }
-        center     = listview(controller.sortedTaskList) {
-            taskCellFormat()
-            selectedTask.bind(selectionModel.selectedItemProperty())
-        }
-    }
+        center = listview(controller.sortedTasks) {
+            Bindings.bindContent(controller.selectedTasks, selectionModel.selectedItems)
+            selectionModel.selectionMode = SelectionMode.MULTIPLE
 
-
-    private fun ListView<Task>.taskCellFormat() = cellFormat {
-        graphic = form {
-            fieldset {
-                label(it.name) {
-                    style {
-                        fontSize = 16.pt
-                    }
-                }
-                label(if (it.completed) "Completed" else "Uncompleted") {
-                    style {
-                        fontSize = 8.pt
-                    }
-                }
-                label(if (it.comment.isNotEmpty()) it.comment else "<No Comment>") {
-                    style {
-                        fontSize = 12.pt
-                        fontStyle = FontPosture.ITALIC
-                    }
-                }
-                label(it.deadlineProperty.asNowRelativePeriod().asString) {
-                    style {
-                        fontSize = 10.pt
-                        fontStyle = FontPosture.ITALIC
-                    }
-                }
-                label(it.deadline.toString()) {
-                    style {
-                        fontSize = 10.pt
-                        fontStyle = FontPosture.ITALIC
+            cellFormat {
+                graphic = form {
+                    fieldset {
+                        label(it.nameStringProperty) {
+                            style {
+                                fontSize = 16.pt
+                            }
+                        }
+                        label(it.completedStringProperty) {
+                            style {
+                                fontSize = 8.pt
+                            }
+                        }
+                        label(it.commentStringProperty) {
+                            style {
+                                fontSize = 12.pt
+                                fontStyle = FontPosture.ITALIC
+                                textFill = Color.DIMGRAY
+                            }
+                        }
+                        label(it.deadlineDurationStringProperty) {
+                            style {
+                                fontStyle = FontPosture.ITALIC
+                                fontSize = 10.pt
+                                textFill = Color.DARKBLUE
+                            }
+                        }
+                        label(it.deadlineStringProperty) {
+                            style {
+                                fontSize = 10.pt
+                                fontStyle = FontPosture.ITALIC
+                                textFill = Color.DARKBLUE
+                            }
+                        }
                     }
                 }
             }
@@ -76,3 +68,6 @@ class TickerView : View() {
     }
 
 }
+
+
+
