@@ -12,22 +12,10 @@ import tech.flandia_yingm.ticker.task.Task
 import tech.flandia_yingm.ticker.task.TaskCompletion
 import tech.flandia_yingm.ticker.taskeditor.TaskEditorView
 import tornadofx.Controller
-import java.time.LocalDateTime
 
 class TickerController : Controller() {
 
-    private val tasks: ObservableList<Task> = FXCollections.observableList(
-            mutableListOf(
-                    Task("Completed Task 1", "Nothing", LocalDateTime.of(1949, 10, 1, 0, 0, 0), TaskCompletion.COMPLETE),
-                    Task("Completed Task 2", "", LocalDateTime.of(1949, 10, 1, 0, 0, 0), TaskCompletion.COMPLETE),
-                    Task("Completed Task 3", "Nothing", LocalDateTime.of(2049, 10, 1, 0, 0, 0), TaskCompletion.COMPLETE),
-                    Task("Completed Task 4", "", LocalDateTime.now(), TaskCompletion.COMPLETE),
-                    Task("Uncompleted Task 1", "Nothing", LocalDateTime.of(1949, 10, 1, 0, 0, 0), TaskCompletion.INCOMPLETE),
-                    Task("Uncompleted Task 2", "", LocalDateTime.of(1949, 10, 1, 0, 0, 0), TaskCompletion.INCOMPLETE),
-                    Task("Uncompleted Task 3", "Nothing", LocalDateTime.of(2049, 10, 1, 0, 0, 0), TaskCompletion.INCOMPLETE),
-                    Task("Uncompleted Task 4", "", LocalDateTime.now(), TaskCompletion.INCOMPLETE)
-            )
-    ) { arrayOf(it.nameProperty, it.commentProperty, it.deadlineProperty, it.completionProperty) }
+    private val tasks: ObservableList<Task> = FXCollections.observableList(mutableListOf(), Task::extractObservable)
 
     val sortedTasks: SortedList<Task> = tasks.sorted()
 
@@ -55,16 +43,18 @@ class TickerController : Controller() {
         selectionModelProperty.value.clearSelection()
     }
 
+    fun editSelectedTasks() {
+        if (!selectedTasks.isEmpty()) {
+            TaskEditorView(MultipleTask(selectedTasks.toList())).openModal()
+        }
+    }
+
     fun completeSelectedTasks() {
         selectedTasks.toList().forEach { it.completion = TaskCompletion.COMPLETE }
     }
 
     fun incompleteSelectedTasks() {
         selectedTasks.toList().forEach { it.completion = TaskCompletion.INCOMPLETE }
-    }
-
-    fun editSelectedTasks() {
-        TaskEditorView(MultipleTask(selectedTasks.toList())).openModal()
     }
 
 }

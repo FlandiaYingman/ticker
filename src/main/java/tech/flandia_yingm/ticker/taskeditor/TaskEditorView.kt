@@ -1,7 +1,11 @@
 package tech.flandia_yingm.ticker.taskeditor
 
 import tech.flandia_yingm.ticker.task.MultipleTask
+import tech.flandia_yingm.ticker.task.TaskCompletion
 import tech.flandia_yingm.ticker.task.TaskUtils.asLocalDateProperty
+import tech.flandia_yingm.ticker.task.TaskUtils.asLocalTimeProperty
+import tech.flandia_yingm.ticker.task.TaskUtils.timeToStringProp
+import tech.flandia_yingm.ticker.task.TaskUtils.dateToStringProp
 import tornadofx.*
 
 class TaskEditorView(editing: MultipleTask) : View() {
@@ -20,6 +24,10 @@ class TaskEditorView(editing: MultipleTask) : View() {
             }
             field("Deadline") {
                 datepicker(model.deadline.asLocalDateProperty())
+                textfield(model.deadline.asLocalTimeProperty().timeToStringProp()) { }
+            }
+            field("Completion") {
+                combobox<TaskCompletion>(model.completion, TaskCompletion.values().toList().observable())
             }
         }
         hbox {

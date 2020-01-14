@@ -6,6 +6,5 @@ package tech.flandia_yingm.ticker.task
  */
 enum class TaskCompletion {
     INCOMPLETE,
-    COMPLETE,
-    MULTIPLE_VALUE
+    COMPLETE
 }

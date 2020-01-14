@@ -18,14 +18,14 @@ class TickerView : View() {
             button("Remove") {
                 action(controller::removeSelectedTasks)
             }
+            button("Edit") {
+                action(controller::editSelectedTasks)
+            }
             button("Complete") {
                 action(controller::completeSelectedTasks)
             }
             button("Incomplete") {
                 action(controller::incompleteSelectedTasks)
-            }
-            button("Edit") {
-                action(controller::editSelectedTasks)
             }
         }
         center = listview(controller.sortedTasks) {

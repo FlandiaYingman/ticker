@@ -1,14 +1,17 @@
 package tech.flandia_yingm.ticker.task
 
+import javafx.beans.Observable
+import javafx.beans.property.ReadOnlyStringProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
 import tech.flandia_yingm.ticker.task.TaskUtils.asNowRelativePeriod
-import tech.flandia_yingm.ticker.task.TaskUtils.asStringProperty
 import tech.flandia_yingm.ticker.task.TaskUtils.format
+import tech.flandia_yingm.ticker.util.PropertyUtils.asStringProperty
 import tornadofx.getValue
 import tornadofx.setValue
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class Task(
         name: String = "",
@@ -29,20 +32,19 @@ class Task(
     val completionProperty = SimpleObjectProperty(this, "completion", completion)
     var completion: TaskCompletion by completionProperty
 
-    val nameStringProperty: StringProperty
+    val nameStringProperty: ReadOnlyStringProperty
         get() = nameProperty.asStringProperty { if (it.isNullOrEmpty()) "<No Name>" else it }
-    val commentStringProperty: StringProperty
+    val commentStringProperty: ReadOnlyStringProperty
         get() = commentProperty.asStringProperty { if (it.isNullOrEmpty()) "<No Comment>" else it }
-    val deadlineDurationStringProperty: StringProperty
+    val deadlineDurationStringProperty: ReadOnlyStringProperty
         get() = deadlineProperty.asNowRelativePeriod().asStringProperty { if (it.isNegative) "${it.format()} To" else "${it.format()} Past" }
-    val deadlineStringProperty: StringProperty
-        get() = deadlineProperty.asStringProperty { it.toString() }
-    val completionStringProperty: StringProperty
+    val deadlineStringProperty: ReadOnlyStringProperty
+        get() = deadlineProperty.asStringProperty { it.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)) }
+    val completionStringProperty: ReadOnlyStringProperty
         get() = completionProperty.asStringProperty {
             when (it) {
                 TaskCompletion.INCOMPLETE -> "Incomplete"
                 TaskCompletion.COMPLETE -> "Complete"
-                TaskCompletion.MULTIPLE_VALUE -> "<Multiple Value>"
                 else -> "<NULL_ERROR>"
             }
         }
@@ -53,5 +55,7 @@ class Task(
                     .thenComparing(Task::name)
                     .thenComparing(Task::comment)
                     .compare(this, other)
+
+    fun extractObservable(): Array<Observable> = arrayOf(nameProperty, commentProperty, deadlineProperty, completionProperty)
 
 }
