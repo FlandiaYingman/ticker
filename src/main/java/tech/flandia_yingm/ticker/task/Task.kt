@@ -1,11 +1,13 @@
 package tech.flandia_yingm.ticker.task
 
 import javafx.beans.Observable
+import javafx.beans.property.ReadOnlyProperty
 import javafx.beans.property.ReadOnlyStringProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import tech.flandia_yingm.ticker.task.TaskUtils.asNowRelativePeriod
 import tech.flandia_yingm.ticker.task.TaskUtils.format
+import tech.flandia_yingm.ticker.task.TaskUtils.nowLocalDateTimeProperty
 import tech.flandia_yingm.ticker.util.PropertyUtils.asStringProperty
 import tornadofx.getValue
 import tornadofx.setValue

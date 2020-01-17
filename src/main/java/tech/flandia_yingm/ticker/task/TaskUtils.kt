@@ -19,7 +19,7 @@ import kotlin.concurrent.thread
 
 object TaskUtils {
 
-    private val nowLocalDateTimeProperty: Property<LocalDateTime>
+    val nowLocalDateTimeProperty: Property<LocalDateTime>
 
     init {
         nowLocalDateTimeProperty = SimpleObjectProperty(LocalDateTime.now())
